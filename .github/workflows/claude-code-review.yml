@@ -22,25 +22,9 @@ jobs:
           git fetch origin ${{ github.base_ref }}
           git diff origin/${{ github.base_ref }}...HEAD > /tmp/pr_diff.txt
 
-          cat > /tmp/review_prompt.txt << 'PROMPT'
-          あなたはiOSアプリ開発の専門家です。以下のgit diffをコードレビューしてください。
+          claude -p "/ios-review-code
 
-          レビュー観点:
-          - バグ・ロジックエラー
-          - Swift/SwiftUIのベストプラクティス
-          - パフォーマンス上の問題
-          - セキュリティ上の問題
-          - 可読性・保守性
-
-          問題がある場合はファイル名と行番号を明示してください。
-          問題がなければ「LGTM」と返してください。
-
-          ---
-          PROMPT
-
-          cat /tmp/pr_diff.txt >> /tmp/review_prompt.txt
-
-          claude -p "$(cat /tmp/review_prompt.txt)" > /tmp/review_result.txt 2>&1
+          $(cat /tmp/pr_diff.txt)" > /tmp/review_result.txt 2>&1
 
       - name: Post review comment
         uses: actions/github-script@v7
