@@ -1,0 +1,68 @@
+name: Claude Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  review:
+    runs-on: self-hosted
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get diff
+        id: diff
+        run: |
+          git fetch origin ${{ github.base_ref }}
+          DIFF=$(git diff origin/${{ github.base_ref }}...HEAD)
+          # GitHub Actions の出力に安全に渡す
+          echo "diff<<EOF_DIFF" >> $GITHUB_OUTPUT
+          echo "$DIFF" >> $GITHUB_OUTPUT
+          echo "EOF_DIFF" >> $GITHUB_OUTPUT
+
+      - name: Run Claude Code Review
+        id: claude_review
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          DIFF='${{ steps.diff.outputs.diff }}'
+
+          REVIEW=$(claude -p "あなたはiOSアプリ開発の専門家です。以下のgit diffをコードレビューしてください。
+
+          レビュー観点:
+          - バグ・ロジックエラー
+          - Swift/SwiftUIのベストプラクティス
+          - パフォーマンス上の問題
+          - セキュリティ上の問題
+          - 可読性・保守性
+
+          問題がある場合はファイル名と行番号を明示してください。
+          問題がなければ「LGTM」と返してください。
+
+          ---
+          $DIFF
+          " 2>&1)
+
+          echo "review<<EOF_REVIEW" >> $GITHUB_OUTPUT
+          echo "$REVIEW" >> $GITHUB_OUTPUT
+          echo "EOF_REVIEW" >> $GITHUB_OUTPUT
+
+      - name: Post review comment
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const review = `${{ steps.claude_review.outputs.review }}`;
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `## Claude Code Review\n\n${review}\n\n---\n*Reviewed by Claude Code (self-hosted runner)*`
+            });
