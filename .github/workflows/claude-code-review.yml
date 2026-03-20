@@ -40,3 +40,9 @@ jobs:
           plugins: 'code-review@claude-code-plugins'
           prompt: |
             /code-review:code-review ${{ github.repository }}/pull/${{ github.event.pull_request.number }}
+
+            結果をこのPRにコメントしてください。
+
+            ## コメントルール
+            - 指摘事項がある場合: 各指摘をガイドラインの観点に基づき日本語で具体的に説明し、改善提案を含めてコメントしてください。
+            - 指摘事項がない場合: 「レビュー完了：問題は見つかりませんでした。」とコメントしてください。
