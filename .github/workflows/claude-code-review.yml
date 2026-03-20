@@ -27,8 +27,11 @@ jobs:
           printf '\n---\n' >> /tmp/review_prompt.txt
           cat /tmp/pr_diff.txt >> /tmp/review_prompt.txt
 
+          set +e
           claude -p "$(cat /tmp/review_prompt.txt)" > /tmp/review_result.txt 2>/tmp/review_error.txt
           EXIT_CODE=$?
+          set -e
+          echo "=== exit: $EXIT_CODE ==="
           echo "=== stderr ===" && cat /tmp/review_error.txt
           echo "=== stdout ===" && cat /tmp/review_result.txt
           exit $EXIT_CODE
