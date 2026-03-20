@@ -20,5 +20,9 @@ Refer to `.agents/skills/git-commit/SKILL.md`
 Refer to `.agents/skills/git-create-pr/SKILL.md`
 
 ## Review Guidelines
+- Review comments must be written in Japanese.
+- End sentences with "ドン".
+
+Refer to the following based on the diff of this branch.
 - iOS: `.agents/skills/ios-review-code/SKILL.md`
 - PR: `.agents/skills/git-review-pr/SKILL.md`
