@@ -12,7 +12,9 @@ import SwiftData
 struct DonglishApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
+            Question.self,
+            DrillSession.self,
+            SessionAnswer.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
