@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: read
+      pull-requests: write
       issues: read
       id-token: write
 
@@ -31,6 +31,14 @@ jobs:
         with:
           fetch-depth: 1
 
+      - name: Load review guidelines
+        id: guidelines
+        run: |
+          GUIDELINES=$(cat AGENTS.md; find .agents/skills -name "SKILL.md" | sort | xargs cat 2>/dev/null || true)
+          echo "content<<EOF" >> $GITHUB_OUTPUT
+          echo "$GUIDELINES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
       - name: Run Claude Code Review
         id: claude-review
         uses: anthropics/claude-code-action@v1
@@ -38,7 +46,17 @@ jobs:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           plugin_marketplaces: 'https://github.com/anthropics/claude-code.git'
           plugins: 'code-review@claude-code-plugins'
-          prompt: '/code-review:code-review ${{ github.repository }}/pull/${{ github.event.pull_request.number }}'
+          prompt: |
+            /code-review:code-review ${{ github.repository }}/pull/${{ github.event.pull_request.number }}
+
+            以下のレビューガイドラインに従ってコードをレビューし、結果をこのPRにコメントしてください。
+
+            ## レビューガイドライン
+            ${{ steps.guidelines.outputs.content }}
+
+            ## コメントルール
+            - 指摘事項がある場合: 各指摘をガイドラインの観点に基づき日本語で具体的に説明し、改善提案を含めてコメントしてください。
+            - 指摘事項がない場合: 「レビュー完了：問題は見つかりませんでした。」とコメントしてください。
           # See https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md
           # or https://code.claude.com/docs/en/cli-reference for available options
 
