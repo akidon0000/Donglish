@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct DrillActiveView: View {
-    @Bindable var viewModel: DrillFlowViewModel
+    var drillFlow: DrillFlow
 
     var body: some View {
         VStack(spacing: 0) {
@@ -17,7 +17,7 @@ struct DrillActiveView: View {
     private var progressHeader: some View {
         VStack(spacing: 8) {
             HStack {
-                Text("Level \(viewModel.currentLevel)")
+                Text("Level \(drillFlow.currentLevel)")
                     .font(.caption.bold())
                     .padding(.horizontal, 8)
                     .padding(.vertical, 4)
@@ -26,13 +26,13 @@ struct DrillActiveView: View {
 
                 Spacer()
 
-                Text("\(viewModel.questionsAnswered) / \(viewModel.totalQuestions)")
+                Text("\(drillFlow.questionsAnswered) / \(drillFlow.totalQuestions)")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
 
-            ProgressView(value: Double(viewModel.questionsAnswered),
-                        total: Double(max(viewModel.totalQuestions, 1)))
+            ProgressView(value: Double(drillFlow.questionsAnswered),
+                        total: Double(max(drillFlow.totalQuestions, 1)))
                 .tint(.blue)
         }
     }
@@ -41,13 +41,13 @@ struct DrillActiveView: View {
         VStack(spacing: 16) {
             stateIndicator
 
-            if viewModel.isScreenUIMode, let question = viewModel.currentQuestion {
+            if drillFlow.isScreenUIMode, let question = drillFlow.currentQuestion {
                 Text(question.englishText)
                     .font(.title2)
                     .multilineTextAlignment(.center)
                     .padding()
 
-                if case .playingParaphrase(let stage) = viewModel.state {
+                if case .playingParaphrase(let stage) = drillFlow.state {
                     Text(stage == 1 ? question.paraphrase1 : question.paraphrase2)
                         .font(.body)
                         .foregroundStyle(.secondary)
@@ -55,7 +55,7 @@ struct DrillActiveView: View {
                         .padding(.horizontal)
                 }
 
-                if case .playingJapaneseExplanation = viewModel.state {
+                if case .playingJapaneseExplanation = drillFlow.state {
                     Text(question.japaneseExplanation)
                         .font(.body)
                         .foregroundStyle(.orange)
@@ -63,7 +63,7 @@ struct DrillActiveView: View {
                         .padding(.horizontal)
                 }
 
-                if case .playingJapaneseSummary = viewModel.state {
+                if case .playingJapaneseSummary = drillFlow.state {
                     Text(question.japaneseSummary)
                         .font(.body)
                         .foregroundStyle(.green)
@@ -76,7 +76,7 @@ struct DrillActiveView: View {
 
     private var stateIndicator: some View {
         Group {
-            switch viewModel.state {
+            switch drillFlow.state {
             case .playingQuestion:
                 Label("リスニング中...", systemImage: "speaker.wave.2")
                     .font(.headline)
@@ -105,10 +105,10 @@ struct DrillActiveView: View {
 
     private var controlButtons: some View {
         VStack(spacing: 16) {
-            if case .awaitingAnswer = viewModel.state {
+            if case .awaitingAnswer = drillFlow.state {
                 HStack(spacing: 24) {
                     Button {
-                        Task { await viewModel.answerNo() }
+                        Task { await drillFlow.answerNo() }
                     } label: {
                         Label("No", systemImage: "xmark.circle.fill")
                             .font(.title2)
@@ -119,7 +119,7 @@ struct DrillActiveView: View {
                     .controlSize(.large)
 
                     Button {
-                        Task { await viewModel.answerYes() }
+                        Task { await drillFlow.answerYes() }
                     } label: {
                         Label("Yes", systemImage: "checkmark.circle.fill")
                             .font(.title2)
@@ -133,21 +133,21 @@ struct DrillActiveView: View {
 
             HStack(spacing: 24) {
                 Button {
-                    Task { await viewModel.replayCurrentQuestion() }
+                    Task { await drillFlow.replayCurrentQuestion() }
                 } label: {
                     Image(systemName: "arrow.counterclockwise")
                 }
                 .buttonStyle(.bordered)
 
                 Button {
-                    Task { await viewModel.skipQuestion() }
+                    Task { await drillFlow.skipQuestion() }
                 } label: {
                     Image(systemName: "forward.fill")
                 }
                 .buttonStyle(.bordered)
 
                 Button {
-                    viewModel.stopSession()
+                    drillFlow.stopSession()
                 } label: {
                     Image(systemName: "stop.fill")
                 }

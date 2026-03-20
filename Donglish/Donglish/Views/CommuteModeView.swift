@@ -3,7 +3,7 @@ import SwiftData
 
 struct CommuteModeView: View {
     @Environment(\.modelContext) private var modelContext
-    @State private var viewModel = DrillFlowViewModel()
+    @State private var drillFlow = DrillFlow()
     @Query(filter: #Predicate<Question> { $0.statusRawValue == "new" },
            sort: \Question.level)
     private var newQuestions: [Question]
@@ -14,18 +14,13 @@ struct CommuteModeView: View {
     var body: some View {
         NavigationStack {
             Group {
-                switch viewModel.state {
+                switch drillFlow.state {
                 case .idle:
                     sessionStartView
                 case .sessionComplete:
-                    SessionSummaryView(
-                        totalQuestions: viewModel.questionsAnswered,
-                        yesCount: viewModel.yesCount,
-                        noCount: viewModel.noCount,
-                        onDismiss: { viewModel = DrillFlowViewModel() }
-                    )
+                    SessionSummaryView(drillFlow: drillFlow)
                 default:
-                    DrillActiveView(viewModel: viewModel)
+                    DrillActiveView(drillFlow: drillFlow)
                 }
             }
             .navigationTitle("Commute Mode")
@@ -51,7 +46,7 @@ struct CommuteModeView: View {
 
             VStack(spacing: 12) {
                 Button {
-                    Task { await startMorningSession() }
+                    Task { await startSession(type: .morning) }
                 } label: {
                     Label("朝のドリルを開始", systemImage: "sunrise")
                         .frame(maxWidth: .infinity)
@@ -60,7 +55,7 @@ struct CommuteModeView: View {
                 .controlSize(.large)
 
                 Button {
-                    Task { await startEveningSession() }
+                    Task { await startSession(type: .evening) }
                 } label: {
                     Label("帰りのドリルを開始", systemImage: "sunset")
                         .frame(maxWidth: .infinity)
@@ -74,37 +69,15 @@ struct CommuteModeView: View {
         }
     }
 
-    private func startMorningSession() async {
-        let questions = buildSessionQuestions(type: .morning)
-        await viewModel.startSession(
+    private func startSession(type: SessionType) async {
+        let questions = SessionComposer.buildSessionQuestions(
+            newQuestions: newQuestions,
+            reviewQuestions: reviewQuestions
+        )
+        await drillFlow.startSession(
             modelContext: modelContext,
-            sessionType: .morning,
+            sessionType: type,
             questions: questions
         )
-    }
-
-    private func startEveningSession() async {
-        let questions = buildSessionQuestions(type: .evening)
-        await viewModel.startSession(
-            modelContext: modelContext,
-            sessionType: .evening,
-            questions: questions
-        )
-    }
-
-    private func buildSessionQuestions(type: SessionType) -> [Question] {
-        let config = SessionConfig()
-        let counts = SessionComposer.questionCounts(config: config)
-
-        let dueReview = reviewQuestions.filter { q in
-            guard let nextDate = q.nextReviewDate else { return false }
-            return nextDate <= Date()
-        }
-
-        var result: [Question] = []
-        result.append(contentsOf: Array(newQuestions.prefix(counts.new)))
-        result.append(contentsOf: Array(dueReview.prefix(counts.review)))
-        result.shuffle()
-        return result
     }
 }
