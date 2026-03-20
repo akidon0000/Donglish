@@ -13,6 +13,9 @@
 
 
 # GitHub Related
+## Branch Strategy
+Refer to `.agents/skills/git-branch-strategy/SKILL.md`
+
 ## Commit Message Rules
 Refer to `.agents/skills/git-commit/SKILL.md`
 
