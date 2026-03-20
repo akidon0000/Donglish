@@ -22,13 +22,12 @@ jobs:
           git fetch origin ${{ github.base_ref }}
           git diff origin/${{ github.base_ref }}...HEAD > /tmp/pr_diff.txt
 
-          cat .agents/skills/ios-review-code/SKILL.md > /tmp/review_prompt.txt
+          # フロントマター(---)を除去してSKILL.mdを読み込む
+          awk '/^---/{f++; next} f!=1{print}' .agents/skills/ios-review-code/SKILL.md > /tmp/review_prompt.txt
           printf '\n---\n' >> /tmp/review_prompt.txt
           cat /tmp/pr_diff.txt >> /tmp/review_prompt.txt
 
-          claude -p "$(cat /tmp/review_prompt.txt)" > /tmp/review_result.txt 2>&1 || true
-          echo "=== claude output ==="
-          cat /tmp/review_result.txt
+          claude -p "$(cat /tmp/review_prompt.txt)" > /tmp/review_result.txt 2>&1
 
       - name: Post review comment
         uses: actions/github-script@v7
