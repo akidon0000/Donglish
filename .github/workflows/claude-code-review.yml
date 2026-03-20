@@ -19,15 +19,7 @@ jobs:
 
       - name: Run Claude Code Review
         run: |
-          git fetch origin ${{ github.base_ref }}
-          git diff origin/${{ github.base_ref }}...HEAD > /tmp/pr_diff.txt
-
-          SKILL=$(cat .agents/skills/ios-review-code/SKILL.md)
-
-          claude -p "${SKILL}
-
-          ---
-          $(cat /tmp/pr_diff.txt)" > /tmp/review_result.txt 2>&1
+          claude -p "こんにちは" > /tmp/review_result.txt 2>&1
 
       - name: Post review comment
         uses: actions/github-script@v7
