@@ -20,6 +20,11 @@ Refer to `.agents/skills/git-commit/SKILL.md`
 Refer to `.agents/skills/git-create-pr/SKILL.md`
 
 ## Review Guidelines
-Refer to `.agents/skills/git-review-pr/SKILL.md`
+- Review comments must be written in Japanese.
+- End sentences with "ドン".
+- Use severity levels: 🚫 MUST FIX / ⚠️ SHOULD FIX / 💬 NIT / 👍 GOOD
+- Wrap each item in `<details>` toggle with `- [ ]` checkbox.
 
-For iOS-specific review criteria, also refer to `.agents/skills/ios-review-code/SKILL.md`
+For detailed workflow and template, see:
+- `.agents/skills/git-review-pr/SKILL.md`
+- `.agents/skills/ios-review-code/SKILL.md` (iOS-specific criteria)
