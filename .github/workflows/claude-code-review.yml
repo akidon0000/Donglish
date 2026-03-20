@@ -35,9 +35,10 @@ jobs:
         id: guidelines
         run: |
           GUIDELINES=$(cat AGENTS.md; find .agents/skills -name "SKILL.md" | sort | xargs cat 2>/dev/null || true)
-          echo "content<<EOF" >> $GITHUB_OUTPUT
+          DELIMITER="GUIDELINES_DELIMITER_$(date +%s)"
+          echo "content<<${DELIMITER}" >> $GITHUB_OUTPUT
           echo "$GUIDELINES" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          echo "${DELIMITER}" >> $GITHUB_OUTPUT
 
       - name: Run Claude Code Review
         id: claude-review
