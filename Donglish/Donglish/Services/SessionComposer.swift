@@ -36,8 +36,8 @@ struct SessionComposer: Sendable {
     /// Calculate how many questions of each type for a session
     static func questionCounts(config: SessionConfig) -> (new: Int, review: Int, comprehensive: Int) {
         let reviewCount = Int(Double(config.totalQuestions) * config.reviewRatio)
-        let comprehensiveCount = Int(Double(config.totalQuestions) * config.comprehensiveReviewRatio)
-        let newCount = config.totalQuestions - reviewCount - comprehensiveCount
+        let newCount = Int(Double(config.totalQuestions) * config.newQuestionRatio)
+        let comprehensiveCount = config.totalQuestions - newCount - reviewCount
         return (new: newCount, review: reviewCount, comprehensive: comprehensiveCount)
     }
 }

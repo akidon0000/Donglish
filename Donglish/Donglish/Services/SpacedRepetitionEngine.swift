@@ -71,7 +71,7 @@ struct SpacedRepetitionEngine: Sendable {
         switch difficulty {
         case 1: return 3
         case 2: return 1
-        case 3: return 0  // Same day (evening review)
+        case 3: return 1  // 翌日レビュー（0だと interval が永久に進まないため）
         default: return 3
         }
     }
