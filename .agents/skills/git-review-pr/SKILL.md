@@ -92,8 +92,8 @@ Review each file against criteria:
 
 | 判定 | 条件 |
 |---|---|
-| ✅ **Approve** | MUST FIX が 0 件、かつ SHOULD FIX が 2 件以下 |
-| 🔄 **Request Changes** | MUST FIX が 1 件以上、または SHOULD FIX が 3 件以上 |
+| ✅ **Approve** | MUST FIX が 0 件、かつ SHOULD FIX が 1 件以下 |
+| 🔄 **Request Changes** | MUST FIX が 1 件以上、または SHOULD FIX が 2 件以上 |
 
 ## Notes
 
