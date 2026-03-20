@@ -1,7 +1,7 @@
 import AVFoundation
 
 @MainActor
-final class TTSService: NSObject, Sendable {
+final class TTSService: NSObject {
     private let synthesizer = AVSpeechSynthesizer()
     private var continuation: CheckedContinuation<Void, Never>?
 
@@ -62,23 +62,19 @@ final class TTSService: NSObject, Sendable {
 extension TTSService: AVSpeechSynthesizerDelegate {
     nonisolated func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
         Task { @MainActor in
-            continuation?.resume()
-            continuation = nil
+            self.resumeCurrentContinuation()
         }
     }
 
     nonisolated func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didCancel utterance: AVSpeechUtterance) {
-        Task { @MainActor in
-            continuation?.resume()
-            continuation = nil
-        }
+        // Don't resume here — the caller of stopSpeaking handles resume directly
     }
 }
 
-enum DrillPrompt: Sendable {
-    case didYouUnderstand
-    case goodMorning
-    case goodEvening
-    case nodReminder
-    case sessionComplete(total: Int, understood: Int, review: Int)
+private extension TTSService {
+    func resumeCurrentContinuation() {
+        guard let c = continuation else { return }
+        continuation = nil
+        c.resume()
+    }
 }

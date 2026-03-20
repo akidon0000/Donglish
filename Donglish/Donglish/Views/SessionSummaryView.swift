@@ -1,14 +1,11 @@
 import SwiftUI
 
 struct SessionSummaryView: View {
-    let totalQuestions: Int
-    let yesCount: Int
-    let noCount: Int
-    let onDismiss: () -> Void
+    var drillFlow: DrillFlow
 
     private var yesRate: Double {
-        guard totalQuestions > 0 else { return 0 }
-        return Double(yesCount) / Double(totalQuestions) * 100
+        guard drillFlow.questionsAnswered > 0 else { return 0 }
+        return Double(drillFlow.yesCount) / Double(drillFlow.questionsAnswered) * 100
     }
 
     var body: some View {
@@ -23,9 +20,9 @@ struct SessionSummaryView: View {
                 .font(.largeTitle.bold())
 
             VStack(spacing: 16) {
-                StatRow(label: "出題数", value: "\(totalQuestions)")
-                StatRow(label: "理解できた", value: "\(yesCount)", color: .green)
-                StatRow(label: "復習に追加", value: "\(noCount)", color: .orange)
+                StatRow(label: "出題数", value: "\(drillFlow.questionsAnswered)")
+                StatRow(label: "理解できた", value: "\(drillFlow.yesCount)", color: .green)
+                StatRow(label: "復習に追加", value: "\(drillFlow.noCount)", color: .orange)
                 StatRow(label: "理解率", value: String(format: "%.0f%%", yesRate), color: .blue)
             }
             .padding()
@@ -35,7 +32,7 @@ struct SessionSummaryView: View {
             Spacer()
 
             Button {
-                onDismiss()
+                drillFlow.reset()
             } label: {
                 Text("閉じる")
                     .frame(maxWidth: .infinity)

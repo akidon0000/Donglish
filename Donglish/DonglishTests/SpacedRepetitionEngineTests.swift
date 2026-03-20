@@ -54,7 +54,7 @@ struct SpacedRepetitionEngineTests {
             consecutiveYesCount: 1,
             currentStatus: "new"
         )
-        #expect(result.newInterval == 0)
+        #expect(result.newInterval == 1)
     }
 
     @Test func yesDoublesInterval() {

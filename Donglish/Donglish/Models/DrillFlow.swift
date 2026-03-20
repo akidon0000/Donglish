@@ -11,9 +11,13 @@ enum DrillState: Sendable {
     case sessionComplete
 }
 
+/// Manages the state machine and data flow for a single drill session.
+///
+/// Used as a `@State` property in views, similar to the `TripEditModel`
+/// pattern from the Wishlist reference project.
 @Observable
 @MainActor
-final class DrillFlowViewModel {
+final class DrillFlow {
     private(set) var state: DrillState = .idle
     private(set) var currentQuestion: Question?
     private(set) var currentNoCount: Int = 0
@@ -33,6 +37,23 @@ final class DrillFlowViewModel {
     var totalQuestions: Int { questions.count }
     var reviewCount: Int { noCount }
     var currentLevel: Int { levelProgression.currentLevel }
+
+    // MARK: - Session Lifecycle
+
+    func reset() {
+        state = .idle
+        currentQuestion = nil
+        currentNoCount = 0
+        questionsAnswered = 0
+        yesCount = 0
+        noCount = 0
+        isScreenUIMode = false
+        levelProgression = LevelProgression()
+        questions = []
+        currentIndex = 0
+        session = nil
+        modelContext = nil
+    }
 
     func startSession(
         modelContext: ModelContext,
@@ -64,6 +85,18 @@ final class DrillFlowViewModel {
         await playNextQuestion()
     }
 
+    func stopSession() {
+        ttsService.stop()
+        gestureService.stopDetection()
+        do {
+            try AudioSessionManager.deactivate()
+        } catch {}
+        finalizeSession()
+        state = .sessionComplete
+    }
+
+    // MARK: - Answer Handling
+
     func answerYes() async {
         guard case .awaitingAnswer = state else { return }
         let wasFirstAttempt = currentNoCount == 0
@@ -72,7 +105,6 @@ final class DrillFlowViewModel {
         levelProgression.recordAnswer(wasYes: true)
 
         if wasFirstAttempt {
-            // Understood immediately -> play Japanese summary for confirmation
             state = .playingJapaneseSummary
             if let question = currentQuestion {
                 await ttsService.speakJapanese(question.japaneseSummary)
@@ -102,7 +134,6 @@ final class DrillFlowViewModel {
             await askDidYouUnderstand()
 
         default:
-            // 3rd No -> Japanese explanation, then move on
             state = .playingJapaneseExplanation
             if let question = currentQuestion {
                 await ttsService.speakJapanese(question.japaneseExplanation)
@@ -112,6 +143,8 @@ final class DrillFlowViewModel {
             await playNextQuestion()
         }
     }
+
+    // MARK: - Playback Controls
 
     func replayCurrentQuestion() async {
         guard let question = currentQuestion else { return }
@@ -123,16 +156,6 @@ final class DrillFlowViewModel {
         recordAnswer(wasYes: false)
         levelProgression.recordAnswer(wasYes: false)
         await playNextQuestion()
-    }
-
-    func stopSession() {
-        ttsService.stop()
-        gestureService.stopDetection()
-        do {
-            try AudioSessionManager.deactivate()
-        } catch {}
-        finalizeSession()
-        state = .sessionComplete
     }
 
     func setScreenUIMode(_ enabled: Bool) {
@@ -186,7 +209,6 @@ final class DrillFlowViewModel {
         )
         modelContext.insert(answer)
 
-        // Update question review data
         question.totalPresentations += 1
         if wasYes {
             question.totalYesCount += 1
@@ -207,7 +229,6 @@ final class DrillFlowViewModel {
         question.currentReviewInterval = review.newInterval
         question.statusRawValue = review.newStatus
 
-        // Update session stats
         session.totalQuestions = questionsAnswered
         session.yesCount = yesCount
         session.noCount = noCount
