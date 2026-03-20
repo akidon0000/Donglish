@@ -31,6 +31,14 @@ jobs:
         with:
           fetch-depth: 1
 
+      - name: Load review guidelines
+        id: guidelines
+        run: |
+          GUIDELINES=$(cat AGENTS.md .agents/skills/git-review-pr/SKILL.md .agents/skills/ios-review-code/SKILL.md 2>/dev/null || true)
+          echo "content<<EOF" >> $GITHUB_OUTPUT
+          echo "$GUIDELINES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
       - name: Run Claude Code Review
         id: claude-review
         uses: anthropics/claude-code-action@v1
@@ -41,8 +49,13 @@ jobs:
           prompt: |
             /code-review:code-review ${{ github.repository }}/pull/${{ github.event.pull_request.number }}
 
-            レビュー結果を日本語でこのPRにコメントしてください。
-            - 指摘事項がある場合: 各指摘を日本語で具体的に説明し、改善提案を含めてコメントしてください。
+            以下のレビューガイドラインに従ってコードをレビューし、結果を日本語でこのPRにコメントしてください。
+
+            ## レビューガイドライン
+            ${{ steps.guidelines.outputs.content }}
+
+            ## コメントルール
+            - 指摘事項がある場合: 各指摘をガイドラインの観点に基づき日本語で具体的に説明し、改善提案を含めてコメントしてください。
             - 指摘事項がない場合: 「レビュー完了：問題は見つかりませんでした。」とコメントしてください。
           # See https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md
           # or https://code.claude.com/docs/en/cli-reference for available options
