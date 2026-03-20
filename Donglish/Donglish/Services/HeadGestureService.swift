@@ -33,11 +33,13 @@ final class HeadGestureService {
             guard let self else { return }
             if let error {
                 print("HeadGestureService: motion error - \(error)")
-                self.gestureCallback = nil
+                Task { @MainActor in
+                    self.gestureCallback = nil
+                }
                 return
             }
             guard let motion else { return }
-            MainActor.assumeIsolated {
+            Task { @MainActor in
                 self.processMotion(motion)
             }
         }
@@ -98,7 +100,7 @@ final class HeadGestureService {
         noGestureTimer?.invalidate()
         noGestureTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) { [weak self] _ in
             guard let self else { return }
-            MainActor.assumeIsolated {
+            Task { @MainActor in
                 self.onNoGestureTimeout?()
             }
         }

@@ -28,6 +28,10 @@ struct DonglishApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .onAppear {
+                    let context = sharedModelContainer.mainContext
+                    SampleDataSeeder.seedIfNeeded(modelContext: context)
+                }
         }
         .modelContainer(sharedModelContainer)
     }
