@@ -1,22 +1,13 @@
-//
-//  ContentView.swift
-//  Donglish
-//
-//  Created by Akihiro Matsuyama on 2026/03/20.
-//
-
 import SwiftUI
+import SwiftData
 
 struct ContentView: View {
     var body: some View {
-        NavigationStack {
-            Text("Donglish")
-                .font(.largeTitle)
-                .navigationTitle("Donglish")
-        }
+        CommuteModeView()
     }
 }
 
 #Preview {
     ContentView()
+        .modelContainer(for: [Question.self, DrillSession.self, SessionAnswer.self], inMemory: true)
 }
