@@ -1,5 +1,4 @@
 import CoreMotion
-import Combine
 
 enum HeadGesture: Sendable {
     case nod    // Yes
@@ -7,7 +6,8 @@ enum HeadGesture: Sendable {
 }
 
 @MainActor
-final class HeadGestureService: Observable {
+@Observable
+final class HeadGestureService {
     private let motionManager = CMHeadphoneMotionManager()
     private var gestureCallback: ((HeadGesture) -> Void)?
     private var lastGestureTime: Date = Date()
@@ -30,7 +30,13 @@ final class HeadGestureService: Observable {
         lastGestureTime = Date()
 
         motionManager.startDeviceMotionUpdates(to: .main) { [weak self] motion, error in
-            guard let self, let motion else { return }
+            guard let self else { return }
+            if let error {
+                print("HeadGestureService: motion error - \(error)")
+                self.gestureCallback = nil
+                return
+            }
+            guard let motion else { return }
             MainActor.assumeIsolated {
                 self.processMotion(motion)
             }

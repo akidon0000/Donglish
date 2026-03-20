@@ -6,12 +6,13 @@ struct AirPodsDetector: Sendable {
     static func isAirPodsProConnected() -> Bool {
         let route = AVAudioSession.sharedInstance().currentRoute
         return route.outputs.contains { output in
-            output.portType == .bluetoothA2DP || output.portType == .bluetoothHFP
+            (output.portType == .bluetoothA2DP || output.portType == .bluetoothHFP)
+                && output.portName.lowercased().contains("airpods")
         }
     }
 
     /// Check if connected headphones support head motion tracking
     static func supportsHeadTracking() -> Bool {
-        return CMHeadphoneMotionManager().isDeviceMotionAvailable
+        return isAirPodsProConnected() && CMHeadphoneMotionManager().isDeviceMotionAvailable
     }
 }
