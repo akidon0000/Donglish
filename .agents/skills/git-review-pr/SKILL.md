@@ -77,8 +77,7 @@ Review each file against criteria:
 - 対応確認用の `- [ ]` チェックボックスを各指摘に付与する
 - コード例がある場合は必ず修正前/修正後の両方を示す
 - 該当なしのセクションは省略する（MUST FIX が 0 件なら見出しごと省略）
-- GOOD は最低 1 件出す（良い点も認める）
-- 指摘にはコード例を添える（NIT と GOOD は省略可）
+- 指摘にはコード例を添える
 - 1 つの `<details>` に 1 つの指摘（複合させない）
 - ファイル名は相対パスで記載する（例: `Models/DrillFlow.swift:42`）
 
@@ -88,8 +87,6 @@ Review each file against criteria:
 |---|---|---|---|
 | 🚫 MUST FIX | `🚫 must` | 修正必須。セキュリティ、クラッシュ、データ破損等 | Request Changes |
 | ⚠️ SHOULD FIX | `⚠️ should` | 強く推奨。品質・保守性に影響 | 件数が多ければ Request Changes |
-| 💬 NIT | `💬 nit` | 軽微。命名・スタイル・改善提案 | Approve でも可 |
-| 👍 GOOD | `👍 good` | 良い実装。肯定フィードバック | — |
 
 ## PR Decision Criteria
 

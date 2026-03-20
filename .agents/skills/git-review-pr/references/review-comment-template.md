@@ -6,8 +6,6 @@
 |---|---|
 | 🚫 MUST FIX | X |
 | ⚠️ SHOULD FIX | X |
-| 💬 NIT | X |
-| 👍 GOOD | X |
 
 ---
 
@@ -48,29 +46,5 @@
 ```
 
 - [ ] 対応済み
-
-</details>
-
----
-
-### 💬 NIT
-
-<details>
-<summary>💬 <code>ファイル名:行番号</code> — 軽微な指摘タイトル</summary>
-
-指摘の説明ドン。
-
-- [ ] 対応済み
-
-</details>
-
----
-
-### 👍 GOOD
-
-<details>
-<summary>👍 <code>ファイル名:行番号</code> — 良い実装のタイトル</summary>
-
-良い点の説明ドン。
 
 </details>
