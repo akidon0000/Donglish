@@ -3,26 +3,14 @@ name: Claude Code Review
 on:
   pull_request:
     types: [opened]
-    # Optional: Only run on specific file changes
-    # paths:
-    #   - "src/**/*.ts"
-    #   - "src/**/*.tsx"
-    #   - "src/**/*.js"
-    #   - "src/**/*.jsx"
 
 jobs:
   claude-review:
-    # Optional: Filter by PR author
-    # if: |
-    #   github.event.pull_request.user.login == 'external-contributor' ||
-    #   github.event.pull_request.user.login == 'new-developer' ||
-    #   github.event.pull_request.author_association == 'FIRST_TIME_CONTRIBUTOR'
-
     runs-on: ubuntu-latest
     permissions:
       contents: read
       pull-requests: write
-      issues: read
+      issues: write
       id-token: write
 
     steps:
@@ -46,3 +34,20 @@ jobs:
             ## コメントルール
             - 指摘事項がある場合: 各指摘をガイドラインの観点に基づき日本語で具体的に説明し、改善提案を含めてコメントしてください。
             - 指摘事項がない場合: 「レビュー完了：問題は見つかりませんでした。」とコメントしてください。
+
+      - name: Add thumbs up if no issues
+        if: success()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Get the latest comment from the bot
+          LATEST_COMMENT=$(gh api repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments \
+            --jq '.[-1].body // ""')
+
+          if echo "$LATEST_COMMENT" | grep -q "問題は見つかりませんでした"; then
+            gh api repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/reactions \
+              -f content='+1'
+            echo "👍 No issues found - added thumbs up reaction"
+          else
+            echo "Issues found - skipping thumbs up"
+          fi
