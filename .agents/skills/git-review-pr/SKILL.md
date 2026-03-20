@@ -65,9 +65,9 @@ Review each file against criteria:
 
 ### 4. Output Review
 
-**出力フォーマットは `common-review-format` スキルに従うこと。**
+**出力フォーマットはレビューコメントテンプレートに従うこと。**
 
-参照: `.agents/skills/common-review-format/SKILL.md`
+参照: `references/review-comment-template.md`
 
 ## Notes
 

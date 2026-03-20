@@ -19,9 +19,9 @@ Review iOS code changes from the following perspectives:
 
 ## Output Format
 
-**出力フォーマットは `common-review-format` スキルに従うこと。**
+**出力フォーマットは `git-review-pr` のレビューコメントテンプレートに従うこと。**
 
-参照: `.agents/skills/common-review-format/SKILL.md`
+参照: `.agents/skills/git-review-pr/references/review-comment-template.md`
 
 ## Related Skills
 - SwiftUI details: `.agents/skills/swift-swiftui/SKILL.md`
