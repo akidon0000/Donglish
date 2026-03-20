@@ -1,0 +1,79 @@
+===
+# macOS
+===
+.DS_Store
+
+
+===
+# AI Tools (設定ファイルのみ除外、Agent系はgit管理)
+===
+.claude/settings.local.json
+
+# cursor
+.cursorrules
+
+# Serena
+.serena/memories/
+.serena/cache/
+.serena/index/
+.serena/logs/
+.serena/dashboard/
+.serena/project.local.yml
+
+
+===
+# Xcode
+===
+build/
+DerivedData/
+*.xcuserstate
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata/
+*.moved-aside
+*.hmap
+*.ipa
+
+
+===
+# Swift Package Manager
+===
+.build/
+
+
+===
+# Ruby (fastlane等)
+===
+.bundle/
+vendor/
+
+
+===
+# Environment / Secrets
+===
+.env
+
+
+===
+# Log Files
+===
+*.log
+
+
+===
+# IDE
+===
+.idea/
+*.iml
+
+
+===
+# for empty directory
+===
+!.gitkeep
