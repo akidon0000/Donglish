@@ -34,7 +34,7 @@ jobs:
       - name: Load review guidelines
         id: guidelines
         run: |
-          GUIDELINES=$(cat AGENTS.md .agents/skills/git-review-pr/SKILL.md .agents/skills/ios-review-code/SKILL.md 2>/dev/null || true)
+          GUIDELINES=$(cat AGENTS.md; find .agents/skills -name "SKILL.md" | sort | xargs cat 2>/dev/null || true)
           echo "content<<EOF" >> $GITHUB_OUTPUT
           echo "$GUIDELINES" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
@@ -49,7 +49,7 @@ jobs:
           prompt: |
             /code-review:code-review ${{ github.repository }}/pull/${{ github.event.pull_request.number }}
 
-            以下のレビューガイドラインに従ってコードをレビューし、結果を日本語でこのPRにコメントしてください。
+            以下のレビューガイドラインに従ってコードをレビューし、結果をこのPRにコメントしてください。
 
             ## レビューガイドライン
             ${{ steps.guidelines.outputs.content }}
