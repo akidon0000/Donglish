@@ -6,7 +6,7 @@ on:
 
 jobs:
   review:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     permissions:
       contents: read
       pull-requests: write
@@ -17,29 +17,27 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Get diff
-        id: diff
+      - name: Run Claude Code Review
         run: |
-          git fetch origin ${{ github.base_ref }}
-          DIFF=$(git diff origin/${{ github.base_ref }}...HEAD)
-          echo "diff<<EOF" >> $GITHUB_OUTPUT
-          echo "$DIFF" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          echo "=== claude path ===" && which claude || echo "claude not found"
+          echo "=== claude version ===" && claude --version || echo "version check failed"
+          echo "=== test ===" && claude -p "こんにちは" 2>&1 | tee /tmp/review_result.txt
+          echo "=== exit code: $? ==="
 
-      - name: Get review skill
-        id: skill
-        run: |
-          SKILL=$(cat .agents/skills/ios-review-code/SKILL.md)
-          echo "skill<<EOF" >> $GITHUB_OUTPUT
-          echo "$SKILL" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-
-      - name: Claude Code Review
-        uses: anthropics/claude-code-action@beta
+      - name: Post review comment
+        uses: actions/github-script@v7
         with:
-          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          direct_prompt: |
-            ${{ steps.skill.outputs.skill }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const review = fs.readFileSync('/tmp/review_result.txt', 'utf8');
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `## Claude Code Review\n\n${review}\n\n---\n*Reviewed by Claude Code (self-hosted runner)*`
+            });
 
-            ---
-            ${{ steps.diff.outputs.diff }}
+      - name: Cleanup
+        if: always()
+        run: rm -f /tmp/review_result.txt
