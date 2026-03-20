@@ -17,7 +17,13 @@ Review iOS code changes from the following perspectives:
 5. **Performance** - Efficient rendering, lazy loading, appropriate caching
 6. **Testing** - Test coverage, testable design, proper use of Swift Testing
 
+## Output Format
+
+**出力フォーマットは `common-review-format` スキルに従うこと。**
+
+参照: `.agents/skills/common-review-format/SKILL.md`
+
 ## Related Skills
-- SwiftUI details: `.agent/skills/swift-swiftui/SKILL.md`
-- Swift Concurrency: `.agent/skills/swift-concurrency/SKILL.md`
-- Swift Testing: `.agent/skills/swift-testing/SKILL.md`
+- SwiftUI details: `.agents/skills/swift-swiftui/SKILL.md`
+- Swift Concurrency: `.agents/skills/swift-swiftconcurrency/SKILL.md`
+- Swift Testing: `.agents/skills/swift-swifttesting/SKILL.md`

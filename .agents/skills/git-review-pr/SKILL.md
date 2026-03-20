@@ -65,44 +65,13 @@ Review each file against criteria:
 
 ### 4. Output Review
 
-```markdown
-# Code Review
+**出力フォーマットは `common-review-format` スキルに従うこと。**
 
-## Improvements
-- [Suggestion 1]
-  - [Specific proposal]
-- [Suggestion 2]
-  ```swift
-  // Code example if needed
-  ```
-
-## Problems
-- [Issue 1]
-  - [Specific description]
-  - [Suggested fix]
-  ```swift
-  // Fix example
-  ```
-```
-
-## Review Guidelines
-
-**Improvements:**
-- Refactoring opportunities
-- Better naming suggestions
-- Additional test cases
-- Performance optimizations
-
-**Problems:**
-- Security vulnerabilities
-- Memory leaks
-- Race conditions
-- Breaking changes without migration
-- Missing error handling
+参照: `.agents/skills/common-review-format/SKILL.md`
 
 ## Notes
 
 - Focus on actionable feedback
 - Provide specific examples
 - Suggest concrete solutions
-- Prioritize critical issues (Problems) over minor improvements
+- Prioritize critical issues (MUST FIX) over minor improvements (NIT)
