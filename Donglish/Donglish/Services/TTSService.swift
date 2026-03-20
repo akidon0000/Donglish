@@ -13,7 +13,11 @@ final class TTSService: NSObject, Sendable {
     }
 
     func speak(_ text: String, language: String = "en-US") async {
-        synthesizer.stopSpeaking(at: .immediate)
+        if continuation != nil {
+            synthesizer.stopSpeaking(at: .immediate)
+            continuation?.resume()
+            continuation = nil
+        }
         let utterance = AVSpeechUtterance(string: text)
         utterance.voice = AVSpeechSynthesisVoice(language: language)
         utterance.rate = speechRate
@@ -57,14 +61,14 @@ final class TTSService: NSObject, Sendable {
 
 extension TTSService: AVSpeechSynthesizerDelegate {
     nonisolated func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
-        MainActor.assumeIsolated {
+        Task { @MainActor in
             continuation?.resume()
             continuation = nil
         }
     }
 
     nonisolated func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didCancel utterance: AVSpeechUtterance) {
-        MainActor.assumeIsolated {
+        Task { @MainActor in
             continuation?.resume()
             continuation = nil
         }
