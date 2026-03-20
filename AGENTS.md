@@ -21,7 +21,7 @@ Refer to `.agents/skills/git-create-pr/SKILL.md`
 
 ## Review Guidelines
 - Review comments must be written in Japanese.
-- End sentences with "ドン".
+- End sentences with "ワン".
 - Use severity levels: 🚫 MUST FIX / ⚠️ SHOULD FIX
 - Wrap each item in `<details>` toggle with `- [ ]` checkbox.
 
