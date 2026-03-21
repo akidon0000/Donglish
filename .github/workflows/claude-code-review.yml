@@ -19,6 +19,15 @@ jobs:
         with:
           fetch-depth: 1
 
+      - name: Record comment count before review
+        id: before
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          COUNT=$(gh api repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments \
+            --jq 'length')
+          echo "count=$COUNT" >> $GITHUB_OUTPUT
+
       - name: Run Claude Code Review
         id: claude-review
         uses: anthropics/claude-code-action@v1
@@ -31,20 +40,17 @@ jobs:
 
             ## コメントルール
             - 指摘事項がある場合: 各指摘をガイドラインの観点に基づき日本語で具体的に説明し、改善提案を含めてコメントしてください。
-            - 指摘事項がない場合: `REVIEW_RESULT: NO_ISSUES` とだけコメントしてください（他のテキストは不要）。
+            - 指摘事項がない場合: このPRにはコメントしないでください。
 
       - name: Add thumbs up if no issues
         if: success()
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          LATEST=$(gh api repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments \
-            --jq '.[-1] | {id: .id, body: .body}')
-          BODY=$(echo "$LATEST" | jq -r '.body // ""')
-          COMMENT_ID=$(echo "$LATEST" | jq -r '.id // ""')
+          COUNT_AFTER=$(gh api repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments \
+            --jq 'length')
 
-          if echo "$BODY" | grep -q "REVIEW_RESULT: NO_ISSUES"; then
+          if [ "$COUNT_AFTER" -le "${{ steps.before.outputs.count }}" ]; then
             gh api repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/reactions \
               -f content='+1'
-            gh api --method DELETE repos/${{ github.repository }}/issues/comments/$COMMENT_ID
           fi
