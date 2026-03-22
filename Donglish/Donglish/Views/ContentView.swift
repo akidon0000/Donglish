@@ -1,7 +1,7 @@
 import SwiftUI
 import SwiftData
 
-struct CommuteModeView: View {
+struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @State private var drillFlow = DrillFlow()
     @Query(filter: #Predicate<Question> { $0.statusRawValue == "new" },

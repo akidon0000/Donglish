@@ -27,11 +27,19 @@ struct DonglishApp: App {
 
     var body: some Scene {
         WindowGroup {
+            #if DEBUG
+            DebugMenuView()
+                .onAppear {
+                    let context = sharedModelContainer.mainContext
+                    SampleDataSeeder.seedIfNeeded(modelContext: context)
+                }
+            #else
             ContentView()
                 .onAppear {
                     let context = sharedModelContainer.mainContext
                     SampleDataSeeder.seedIfNeeded(modelContext: context)
                 }
+            #endif
         }
         .modelContainer(sharedModelContainer)
     }
