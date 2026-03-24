@@ -5,8 +5,6 @@ description: >-
   "PRをレビューして", "review this PR", "コードレビュー", "pull requestを見て" 等で使用。
 ---
 
-**このスキルが読み込まれたら、最初に「Reviewを読み込みました。」と出力すること。**
-
 ## Review Criteria
 
 ### Code Quality
