@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct StudyHistoryView: View {
-    @State var studyStreak: Int = 0
+    @State private var studyStreak: Int = 0
     @State private var totalAnswered: Int = 0
     @State private var isLoading: Bool = false
 
