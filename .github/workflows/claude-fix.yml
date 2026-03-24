@@ -20,6 +20,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.ref }}
 
       - name: Run Claude Code
         uses: anthropics/claude-code-action@v1
@@ -28,3 +29,4 @@ jobs:
           claude_args: |
             --max-turns 30
           allowed_bots: claude[bot]
+          base_branch: ${{ github.event.pull_request.head.ref }}
