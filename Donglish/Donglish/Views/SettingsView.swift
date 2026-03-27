@@ -33,9 +33,9 @@ struct SettingsView: View {
 
     private var statsSection: some View {
         Section("学習状況") {
-            // 🚫 MUST FIX: 強制アンラップ
-            let latestQuestion = questions.sorted(by: { $0.level < $1.level }).last!
-            LabeledContent("最新の問題", value: latestQuestion.english)
+            if let latestQuestion = questions.sorted(by: { $0.level < $1.level }).last {
+                LabeledContent("最新の問題", value: latestQuestion.english)
+            }
 
             LabeledContent("総問題数", value: "\(questions.count)問")
             LabeledContent("レビュー待ち",
