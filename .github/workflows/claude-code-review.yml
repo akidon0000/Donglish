@@ -41,11 +41,18 @@ jobs:
             ## コメントルール
             - 指摘事項がある場合: 各指摘をガイドラインの観点に基づき日本語で具体的に説明し、改善提案を含めてコメントしてください。
             - 指摘事項がない場合: このPRにはコメントしないでください。
+            - インラインコメント内に `@claude` を含めないでください。
 
-            ## 自動修正（@claude fix）
-            - 修正が明確な指摘（MUST FIX / SHOULD FIX）には、インラインコメントの末尾に `@claude fix <具体的指示>` を追記してください。
-            - 書き方は CLAUDE.md の「レビューBot向けガイド」に従ってください。
-            - スコープが広すぎる・曖昧な指摘には `@claude fix` を書かないでください。
+            ## 自動修正（@claude auto-patch）
+            - レビュー完了後、修正が明確な指摘（MUST FIX / SHOULD FIX）ごとに、PRコメント（issue comment）として以下の形式で投稿してください。
+            - 1つの指摘につき1つのPRコメントを投稿してください。複数の指摘をまとめないでください。
+            - スコープが広すぎる・曖昧な指摘にはPRコメントを投稿しないでください。
+            - PRコメントの投稿には `gh issue comment ${{ github.event.pull_request.number }} --repo ${{ github.repository }} --body "<コメント本文>"` を使用してください。
+
+            ### フォーマット
+            ```
+            @claude auto-patch <何を・どのように直すか（具体的に）>
+            ```
 
       - name: Add thumbs up if no issues
         if: success()
