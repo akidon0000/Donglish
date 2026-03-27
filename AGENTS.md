@@ -43,7 +43,7 @@ For detailed workflow and template, see:
 - `.agents/skills/git-review-pr/SKILL.md`
 - `.agents/skills/ios-review-code/SKILL.md` (iOS-specific criteria)
 
-### レビューコメント例
+レビューコメント例
 
 **例1: 🚫 MUST FIX**
 
@@ -85,7 +85,7 @@ private func fetchData() async { ... }
 </details>
 ```
 
-### 自動修正PR作成
+自動修正PR作成
 - レビュー完了後、修正が明確な指摘（MUST FIX / SHOULD FIX）がある場合、レビューコメントに加えて修正PRも同時に作成すること。
 - **指摘ごとに個別の修正PRを作成すること。1つのPRに複数の指摘の修正をまとめないこと。**
 - スコープが広すぎる・曖昧な指摘は修正PRは作成しないかつ作成しなかった理由をレビューコメントすること(インラインコメント)。
