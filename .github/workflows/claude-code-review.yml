@@ -8,7 +8,7 @@ jobs:
   claude-review:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       pull-requests: write
       issues: write
       id-token: write
@@ -43,16 +43,20 @@ jobs:
             - 指摘事項がない場合: このPRにはコメントしないでください。
             - インラインコメント内に `@claude` を含めないでください。
 
-            ## 自動修正（@claude auto-patch）
-            - レビュー完了後、修正が明確な指摘（MUST FIX / SHOULD FIX）ごとに、PRコメント（issue comment）として以下の形式で投稿してください。
-            - 1つの指摘につき1つのPRコメントを投稿してください。複数の指摘をまとめないでください。
-            - スコープが広すぎる・曖昧な指摘にはPRコメントを投稿しないでください。
-            - PRコメントの投稿には `gh issue comment ${{ github.event.pull_request.number }} --repo ${{ github.repository }} --body "<コメント本文>"` を使用してください。
+            ## 自動修正PR作成
+            - レビュー完了後、修正が明確な指摘（MUST FIX / SHOULD FIX）がある場合、レビューコメントに加えて修正PRも作成してください。
+            - 全ての指摘をまとめて1つの修正PRとして作成してください。
+            - スコープが広すぎる・曖昧な指摘は修正PRに含めず、レビューコメントのみにしてください。
 
-            ### フォーマット
-            ```
-            @claude auto-patch <何を・どのように直すか（具体的に）>
-            ```
+            ### 修正PRの作成手順
+            1. 元PRのブランチ `${{ github.head_ref }}` をベースに、新しいブランチ `claude/fix/${{ github.event.pull_request.number }}-review-fixes` を作成
+            2. 指摘箇所を修正してコミット
+            3. 元PRのブランチ `${{ github.head_ref }}` に向けてPRを作成
+            4. 作成したPRのURLをPRコメント（issue comment）として `🔧 修正PRを作成しました → #<PR番号>` の形式で投稿
+
+            ### 絶対ルール
+            - 元PRのブランチへの直接コミット・直接プッシュは一切禁止
+            - 必ず新しいブランチを作成し、修正PRを作成すること
 
       - name: Add thumbs up if no issues
         if: success()

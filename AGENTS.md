@@ -28,30 +28,12 @@ For detailed workflow and template, see:
 - `.agents/skills/git-review-pr/SKILL.md`
 - `.agents/skills/ios-review-code/SKILL.md` (iOS-specific criteria)
 
-### 自動修正（@claude auto-patch）
+### 自動修正PR作成
 - インラインコメント内に `@claude` を含めないこと。
-- 修正が明確な指摘（MUST FIX / SHOULD FIX）ごとに、PRコメント（issue comment）として `@claude auto-patch <具体的指示>` を個別に投稿すること。
-- 1つの指摘につき1つのPRコメントを投稿すること。複数の指摘をまとめないこと。
-- スコープが広すぎる・曖昧な指摘にはPRコメントを投稿しないこと。
-#### フォーマット
-
-```
-@claude auto-patch <何を・どのように直すか（具体的に）>
-```
-
-##### 良い例
-
-```
-@claude auto-patch HogeViewModel の 44行目 guard let に変更して、強制アンラップを除去してください
-@claude auto-patch FugaStore の 123行目 TTSService.speak() の continuation をアクター分離に合わせて @MainActor で保護してください
-```
-
-##### 悪い例（避けること）
-
-```
-@claude auto-patch これを直して   # 指示が曖昧すぎる
-@claude auto-patch コード全体をリファクタリング   # スコープが広すぎる
-```
+- レビュー完了後、修正が明確な指摘（MUST FIX / SHOULD FIX）がある場合、レビューコメントに加えて修正PRも同時に作成すること。
+- 全ての指摘をまとめて1つの修正PRとして作成すること。
+- スコープが広すぎる・曖昧な指摘は修正PRに含めず、レビューコメントのみにすること。
+- 修正PR作成後、PRコメント（issue comment）として `🔧 修正PRを作成しました → #<PR番号>` を投稿すること。
 
 # GitHub Actions 上での Claude の動作ルール（全コマンド共通）
 
@@ -68,7 +50,8 @@ For detailed workflow and template, see:
 4. 元コメントへのリプライ: `🔧 修正PRを作成しました → #<PR番号>` の1行のみ
 
 # @claude auto-patch コマンド仕様
-レビューコメントに @claude auto-patch が書かれた場合、上記の「修正PRの作成手順」に従って修正PRを自動作成する。
+PRコメントに @claude auto-patch が書かれた場合、上記の「修正PRの作成手順」に従って修正PRを自動作成する。
+レビューワークフローでは、レビューと修正PRの作成を同時に行うため、このコマンドは人間が手動で修正を依頼する場合に使用する。
 
 
 # コーディング規約（iOS / Swift）
