@@ -29,8 +29,10 @@ For detailed workflow and template, see:
 - `.agents/skills/ios-review-code/SKILL.md` (iOS-specific criteria)
 
 ### 自動修正（@claude auto-patch）
-- 修正が明確な指摘（MUST FIX / SHOULD FIX）には、インラインコメントの末尾に `@claude auto-patch <具体的指示>` を追記してください。
-- スコープが広すぎる・曖昧な指摘には `@claude auto-patch` を書かず、`@claude auto-patch <具体的指示> でPRを作ることが出来ます。`とコメントして
+- インラインコメント内に `@claude` を含めないこと。
+- 修正が明確な指摘（MUST FIX / SHOULD FIX）ごとに、PRコメント（issue comment）として `@claude auto-patch <具体的指示>` を個別に投稿すること。
+- 1つの指摘につき1つのPRコメントを投稿すること。複数の指摘をまとめないこと。
+- スコープが広すぎる・曖昧な指摘にはPRコメントを投稿しないこと。
 #### フォーマット
 
 ```
