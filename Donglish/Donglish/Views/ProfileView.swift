@@ -22,7 +22,7 @@ struct ProfileView: View {
             HStack {
                 Image(systemName: "flame.fill")
                     .foregroundStyle(.orange)
-                Text("最後に学習した問題: \(latest.english)")
+                Text("最後に学習した問題: \(latest.englishText)")
             }
 
             LabeledContent("総学習問題数", value: "\(questions.count)問")
