@@ -37,15 +37,12 @@ jobs:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           allowed_bots: "claude[bot]"
 
-          # This is an optional setting that allows Claude to read CI results on PRs
           additional_permissions: |
             actions: read
 
-          # Optional: Give a custom prompt to Claude. If this is not specified, Claude will perform the instructions specified in the comment that tagged it.
-          # prompt: 'Update the pull request description to include a summary of changes.'
-
-          # Optional: Add claude_args to customize behavior and configuration
-          # See https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md
-          # or https://code.claude.com/docs/en/cli-reference for available options
-          # claude_args: '--allowed-tools Bash(gh pr:*)'
+          prompt: |
+            【絶対ルール】元PRのブランチへの直接コミット・直接プッシュは一切禁止。
+            コード修正が必要な場合は、必ず claude/fix/<元PR番号>-<短い説明> ブランチを新規作成し、元PRのブランチに向けて修正PRを作成すること。
+            `git push origin <元PRのブランチ>` は絶対に実行しないこと。
+            詳細はAGENTS.mdの「GitHub Actions 上での Claude の動作ルール」を参照。
 
