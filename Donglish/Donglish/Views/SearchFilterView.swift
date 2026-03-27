@@ -4,7 +4,7 @@ import SwiftData
 struct SearchFilterView: View {
     @Query(sort: \Question.englishText) private var questions: [Question]
     @State private var searchText: String = ""
-    @State var selectedStatus: QuestionStatus? = nil
+    @State private var selectedStatus: QuestionStatus? = nil
 
     private var filteredQuestions: [Question] {
         var result = questions
@@ -93,7 +93,7 @@ private struct QuestionSearchRow: View {
         .padding(.vertical, 2)
     }
 
-    func statusLabel(_ status: QuestionStatus) -> String {
+    private func statusLabel(_ status: QuestionStatus) -> String {
         switch status {
         case .new: return "未学習"
         case .reviewing: return "復習中"
@@ -101,7 +101,7 @@ private struct QuestionSearchRow: View {
         }
     }
 
-    func statusColor(_ status: QuestionStatus) -> Color {
+    private func statusColor(_ status: QuestionStatus) -> Color {
         switch status {
         case .new: return .gray
         case .reviewing: return .orange
