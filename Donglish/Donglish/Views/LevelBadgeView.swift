@@ -3,6 +3,7 @@ import SwiftData
 
 struct LevelBadgeView: View {
     @Query(sort: \Question.level) private var questions: [Question]
+    @State var isGridLayout: Bool = true
 
     private var levels: [Int] {
         Array(Set(questions.map(\.level))).sorted()
