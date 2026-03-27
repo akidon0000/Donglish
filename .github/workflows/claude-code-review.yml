@@ -45,28 +45,16 @@ jobs:
 
             ## 自動修正PR作成
             - レビュー完了後、修正が明確な指摘（MUST FIX / SHOULD FIX）がある場合、レビューコメントに加えて修正PRも作成してください。
-            - 全ての指摘をまとめて1つの修正PRとして作成してください。
+            - 指摘ごとに個別の修正PRを作成してください。1つのPRに複数の指摘の修正をまとめないでください。
             - スコープが広すぎる・曖昧な指摘は修正PRに含めず、レビューコメントのみにしてください。
 
-            ### 修正PRの作成手順
-            1. 元PRのブランチ `${{ github.head_ref }}` をベースに、新しいブランチ `claude/fix/${{ github.event.pull_request.number }}-review-fixes` を作成
-            2. 指摘箇所を修正してコミット
+            ### 修正PRの作成手順（指摘ごとに繰り返す）
+            1. 元PRのブランチ `${{ github.head_ref }}` をベースに、新しいブランチ `claude/fix/${{ github.event.pull_request.number }}-<短い説明>` を作成（例: `claude/fix/58-add-private`, `claude/fix/58-guard-let`）
+            2. その指摘の修正のみをコミット
             3. 元PRのブランチ `${{ github.head_ref }}` に向けてPRを作成
-            4. 各レビューコメント（インラインコメント）に対する返信として `🔧 修正PRを作成しました → #<PR番号>` を投稿（`gh api` で対象コメントへのリプライとして投稿すること）
+            4. 対応するレビューコメント（インラインコメント）に対する返信として `🔧 修正PRを作成しました → #<PR番号>` を投稿（`gh api` で対象コメントへのリプライとして投稿すること）
+            5. 次の指摘の修正PRを作成する前に、元PRのブランチに戻ること
 
             ### 絶対ルール
             - 元PRのブランチへの直接コミット・直接プッシュは一切禁止
             - 必ず新しいブランチを作成し、修正PRを作成すること
-
-      - name: Add thumbs up if no issues
-        if: success()
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          COUNT_AFTER=$(gh api repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments \
-            --jq 'length')
-
-          if [ "$COUNT_AFTER" -le "${{ steps.before.outputs.count }}" ]; then
-            gh api repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/reactions \
-              -f content='+1'
-          fi
