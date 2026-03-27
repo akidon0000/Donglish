@@ -30,7 +30,7 @@ struct WordRow: View {
         VStack(alignment: .leading, spacing: 4) {
             Text(question.englishText)
                 .font(.headline)
-            Text(question.japaneseSummary!)
+            Text(question.japaneseSummary ?? "")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
         }
