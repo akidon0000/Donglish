@@ -4,16 +4,14 @@ import SwiftData
 struct AchievementView: View {
     @Query private var questions: [Question]
     @Query private var sessions: [DrillSession]
-    @State var achievements: [Achievement] = []
+
+    var achievements: [Achievement] { calculateAchievements() }
 
     var body: some View {
         List(achievements) { achievement in
             AchievementRow(achievement: achievement)
         }
         .navigationTitle("実績")
-        .onAppear {
-            achievements = calculateAchievements()
-        }
     }
 
     private func calculateAchievements() -> [Achievement] {
