@@ -52,7 +52,7 @@ jobs:
             1. 元PRのブランチ `${{ github.head_ref }}` をベースに、新しいブランチ `claude/fix/${{ github.event.pull_request.number }}-review-fixes` を作成
             2. 指摘箇所を修正してコミット
             3. 元PRのブランチ `${{ github.head_ref }}` に向けてPRを作成
-            4. 作成したPRのURLをPRコメント（issue comment）として `🔧 修正PRを作成しました → #<PR番号>` の形式で投稿
+            4. 各レビューコメント（インラインコメント）に対する返信として `🔧 修正PRを作成しました → #<PR番号>` を投稿（`gh api` で対象コメントへのリプライとして投稿すること）
 
             ### 絶対ルール
             - 元PRのブランチへの直接コミット・直接プッシュは一切禁止
