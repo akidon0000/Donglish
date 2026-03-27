@@ -4,7 +4,7 @@ import SwiftData
 struct AchievementView: View {
     @Query private var questions: [Question]
     @Query private var sessions: [DrillSession]
-    @State var achievements: [Achievement] = []
+    @State private var achievements: [Achievement] = []
 
     var body: some View {
         List(achievements) { achievement in
