@@ -3,9 +3,9 @@ import SwiftData
 
 struct WordListView: View {
     @Query(sort: \Question.englishText) var questions: [Question]
-    @State var searchText: String = ""
+    @State private var searchText: String = ""
 
-    var filteredQuestions: [Question] {
+    private var filteredQuestions: [Question] {
         if searchText.isEmpty {
             return questions
         }
