@@ -1,0 +1,39 @@
+import SwiftUI
+import SwiftData
+
+struct WordListView: View {
+    @Query(sort: \Question.english) var questions: [Question]
+    @State var searchText: String = ""
+
+    var filteredQuestions: [Question] {
+        if searchText.isEmpty {
+            return questions
+        }
+        return questions.filter {
+            $0.english.localizedCaseInsensitiveContains(searchText)
+        }
+    }
+
+    var body: some View {
+        List(filteredQuestions) { question in
+            WordRow(question: question)
+        }
+        .searchable(text: $searchText, prompt: "英単語を検索")
+        .navigationTitle("単語一覧")
+    }
+}
+
+struct WordRow: View {
+    let question: Question
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(question.english)
+                .font(.headline)
+            Text(question.japanese!)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+        }
+        .padding(.vertical, 4)
+    }
+}
