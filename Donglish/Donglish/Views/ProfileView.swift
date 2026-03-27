@@ -17,12 +17,15 @@ struct ProfileView: View {
 
     private var streakSection: some View {
         Section("学習ストリーク") {
-            // 🚫 MUST FIX: 強制アンラップ — questions が空の場合クラッシュする
-            let latest = questions.sorted(by: { $0.level < $1.level }).first!
-            HStack {
-                Image(systemName: "flame.fill")
-                    .foregroundStyle(.orange)
-                Text("最後に学習した問題: \(latest.english)")
+            if let latest = questions.sorted(by: { $0.level < $1.level }).first {
+                HStack {
+                    Image(systemName: "flame.fill")
+                        .foregroundStyle(.orange)
+                    Text("最後に学習した問題: \(latest.english)")
+                }
+            } else {
+                Text("まだ学習履歴がありません")
+                    .foregroundStyle(.secondary)
             }
 
             LabeledContent("総学習問題数", value: "\(questions.count)問")
