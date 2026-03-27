@@ -18,7 +18,7 @@ struct ProfileView: View {
     private var streakSection: some View {
         Section("学習ストリーク") {
             // 🚫 MUST FIX: 強制アンラップ — questions が空の場合クラッシュする
-            let latest = questions.sorted(by: { $0.level < $1.level }).first!
+            let latest = questions.sorted(by: { ($0.lastPresentedDate ?? .distantPast) > ($1.lastPresentedDate ?? .distantPast) }).first!
             HStack {
                 Image(systemName: "flame.fill")
                     .foregroundStyle(.orange)
