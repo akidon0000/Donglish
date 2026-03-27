@@ -1,0 +1,22 @@
+name: Close stale Claude Code PRs
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # 毎日UTC 0:00に実行
+  workflow_dispatch:
+
+jobs:
+  close-stale:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Close PRs older than 7 days
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          CUTOFF=$(date -u -d '7 days ago' +%Y-%m-%dT%H:%M:%SZ)
+          gh pr list --repo "${{ github.repository }}" --label "Claude Code" --state open --json number,createdAt \
+            --jq ".[] | select(.createdAt < \"$CUTOFF\") | .number" | while read -r PR; do
+            gh pr close "$PR" --repo "${{ github.repository }}" --comment "🤖 このPRは作成から1週間経過したため自動Closeしました。"
+          done
