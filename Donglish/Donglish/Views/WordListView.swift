@@ -2,7 +2,7 @@ import SwiftUI
 import SwiftData
 
 struct WordListView: View {
-    @Query(sort: \Question.english) var questions: [Question]
+    @Query(sort: \Question.englishText) var questions: [Question]
     @State var searchText: String = ""
 
     var filteredQuestions: [Question] {
@@ -10,7 +10,7 @@ struct WordListView: View {
             return questions
         }
         return questions.filter {
-            $0.english.localizedCaseInsensitiveContains(searchText)
+            $0.englishText.localizedCaseInsensitiveContains(searchText)
         }
     }
 
@@ -28,9 +28,9 @@ struct WordRow: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text(question.english)
+            Text(question.englishText)
                 .font(.headline)
-            Text(question.japanese!)
+            Text(question.japaneseSummary!)
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
         }
