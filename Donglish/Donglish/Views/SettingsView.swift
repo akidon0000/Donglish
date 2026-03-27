@@ -18,8 +18,7 @@ struct SettingsView: View {
         }
     }
 
-    // ⚠️ SHOULD FIX: private が付いていない
-    var levelSection: some View {
+    private var levelSection: some View {
         Section("レベル設定") {
             Picker("現在のレベル", selection: $selectedLevel) {
                 ForEach(1...5, id: \.self) { level in
