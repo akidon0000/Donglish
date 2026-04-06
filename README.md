@@ -34,5 +34,5 @@ Donglish/
 ## 要件
 
 - iOS 17.0+
-- Xcode 16.0+
+- Xcode 26.0+
 - AirPods Pro（ジェスチャー入力に必要）
