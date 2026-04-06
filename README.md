@@ -24,11 +24,13 @@
 ## プロジェクト構成
 
 ```
-Donglish/
-├── Models/          # データモデル（Question, DrillSession 等）
-├── Views/           # SwiftUI ビュー
-├── Services/        # ビジネスロジック（TTS, ジェスチャー検出, 間隔反復）
-└── Tests/           # ユニットテスト・UIテスト
+Donglish/                # Xcodeプロジェクトルート
+├── Donglish/            # アプリソース
+│   ├── Models/          # データモデル（Question, DrillSession 等）
+│   ├── Views/           # SwiftUI ビュー
+│   └── Services/        # ビジネスロジック（TTS, ジェスチャー検出, 間隔反復）
+├── DonglishTests/       # ユニットテスト
+└── DonglishUITests/     # UIテスト
 ```
 
 ## 要件
