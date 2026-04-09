@@ -1,4 +1,9 @@
-## Code Review
+## Review Body（レビュー結果サマリー）
+
+レビュー本文として投稿する。
+
+````markdown
+レビュー結果
 
 **判定: ✅ Approve** or **判定: 🔄 Request Changes**
 
@@ -6,43 +11,35 @@
 |---|---|
 | 🚫 MUST FIX | X |
 | ⚠️ SHOULD FIX | X |
+````
 
 ---
 
-### 🚫 MUST FIX
+## Inline Comment（各指摘）
 
-- [ ] 🚫 **簡潔な問題タイトル** `ファイル名:行番号`
-<details>
-<summary>詳細</summary>
+該当コード行に対するインラインコメントとして投稿する。
+各指摘には必ず `suggestion` ブロックを含めること。
 
-**問題ドン:**
-問題の詳細な説明ドン。
+### 🚫 MUST FIX テンプレート
 
-**修正前:**
-```swift
-// 現在のコード
+````markdown
+🚫 MUST FIX: 簡潔な問題タイトル
+
+問題の説明ドン。
+
+```suggestion
+修正後のコード
 ```
+````
 
-**修正後:**
-```swift
-// 修正案のコード
+### ⚠️ SHOULD FIX テンプレート
+
+````markdown
+⚠️ SHOULD FIX: 簡潔な改善タイトル
+
+改善の説明ドン。
+
+```suggestion
+修正後のコード
 ```
-
-</details>
-
----
-
-### ⚠️ SHOULD FIX
-
-- [ ] ⚠️ **簡潔な改善タイトル** `ファイル名:行番号`
-<details>
-<summary>詳細</summary>
-
-**提案ドン:**
-改善の詳細な説明ドン。
-
-```swift
-// 改善案のコード例
-```
-
-</details>
+````
