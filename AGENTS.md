@@ -36,7 +36,8 @@ Refer to `.agents/skills/git-create-pr/SKILL.md`
 # Review Guidelines
 - Review comments must be written in Japanese.
 - Use severity levels: 🚫 MUST FIX / ⚠️ SHOULD FIX
-- Wrap each item in `<details>` toggle.
+- レビューは **Review Body（サマリー）** と **Inline Comment（各指摘）** の2層構成で投稿する。
+- 各インラインコメントには必ず `suggestion` ブロックを含めること。
 - If there are issues, comment with the details. If no issues found, comment "コードレビュー結果: 問題なし".
 
 For detailed workflow and template, see:
@@ -45,45 +46,42 @@ For detailed workflow and template, see:
 
 レビューコメント例
 
-**例1: 🚫 MUST FIX**
+**Review Body（レビュー結果サマリー）:**
 
-```markdown
-- [ ] 対応済み確認チェックボックス
-<details>
-<summary>🚫 MUST FIX: 強制アンラップの使用</summary>
+````markdown
+レビュー結果
 
-- `user.name!` で強制アンラップしていますが、`nil` の場合にクラッシュします。`guard let` を使用して安全にアンラップしてください。
+**判定: 🔄 Request Changes**
 
-```swift
-// Before
-let name = user.name!
+| レベル | 件数 |
+|---|---|
+| 🚫 MUST FIX | 1 |
+| ⚠️ SHOULD FIX | 1 |
+````
 
-// After
+**Inline Comment 例1: 🚫 MUST FIX**
+
+````markdown
+🚫 MUST FIX: 強制アンラップの使用
+
+`user.name!` で強制アンラップしていますが、`nil` の場合にクラッシュするドン。`guard let` を使用して安全にアンラップしてくださいドン。
+
+```suggestion
 guard let name = user.name else { return }
 ```
+````
 
-</details>
-```
+**Inline Comment 例2: ⚠️ SHOULD FIX**
 
-**例2: ⚠️ SHOULD FIX**
+````markdown
+⚠️ SHOULD FIX: アクセス制御の不足
 
-```markdown
-- [ ] 対応済み確認チェックボックス
-<details>
-<summary>⚠️ SHOULD FIX: アクセス制御の不足</summary>
+`fetchData()` メソッドはこの View 内でのみ使用されているため、`private` を付与してスコープを限定してくださいドン。
 
-- `fetchData()` メソッドはこの View 内でのみ使用されているため、`private` を付与してスコープを限定してください。
-
-```swift
-// Before
-func fetchData() async { ... }
-
-// After
+```suggestion
 private func fetchData() async { ... }
 ```
-
-</details>
-```
+````
 
 自動修正PR作成
 - レビュー完了後、修正が明確な指摘（MUST FIX / SHOULD FIX）がある場合、レビューコメントに加えて修正PRも同時に作成すること。
