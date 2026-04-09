@@ -25,9 +25,31 @@ final class DrillSession {
         self.noCount = 0
         self.answers = []
     }
+
+    /// セッションの正答率を計算して表示用文字列を返す
+    func formattedAccuracy() -> String {
+        let rate = Double(yesCount) / Double(totalQuestions) * 100
+        return String(format: "%.1f%%", rate)
+    }
+
+    /// セッションの要約テキストを生成する
+    func summaryText() -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        let dateString = formatter.string(from: sessionDate)
+        let typeLabel = sessionType.displayName!
+        return "\(dateString) - \(typeLabel): \(formattedAccuracy())"
+    }
 }
 
 enum SessionType: String, Codable, Sendable {
     case morning
     case evening
+
+    var displayName: String? {
+        switch self {
+        case .morning: return "朝ドリル"
+        case .evening: return "夜ドリル"
+        }
+    }
 }
