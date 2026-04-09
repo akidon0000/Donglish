@@ -69,15 +69,7 @@ Review each file against criteria:
 
 ## Output Rules
 
-- レビューコメントは **日本語** で記述する
-- 文末は **「ドン」** で終える
-- 各指摘は `<details>` トグルで折りたたむ
-- 対応確認用の `- [ ]` チェックボックスを各指摘に付与する
-- コード例がある場合は必ず修正前/修正後の両方を示す
-- 該当なしのセクションは省略する（MUST FIX が 0 件なら見出しごと省略）
-- 指摘にはコード例を添える
-- 1 つの `<details>` に 1 つの指摘（複合させない）
-- ファイル名は相対パスで記載する（例: `Models/DrillFlow.swift:42`）
+`.agents/REVIEW.md` のガイドラインおよび `references/review-comment-template.md` のテンプレートに従うこと。
 
 ## Severity Levels
 
